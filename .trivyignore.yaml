@@ -1,0 +1,5 @@
+misconfigurations:
+  - id: AVD-DS-0002
+    paths:
+      - "Dockerfile"
+    statement: "The image is running in a sandbox environment, which may not be suitable for production use."
