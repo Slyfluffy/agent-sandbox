@@ -10,6 +10,7 @@
         "githubcli",
         "keyrings",
         "misconfig",
+        "noninteractive",
         "Rekor",
         "sigstore",
         "Slyfluffy",

@@ -1,4 +1,6 @@
 FROM ubuntu:26.04@sha256:3131b4cc82a783df6c9df078f86e01819a13594b865c2cad47bd1bca2b7063bb
+# Define the variable for the build phase only
+ARG DEBIAN_FRONTEND=noninteractive
 # Combine all configuration into a single RUN layer to minimize image size
 RUN apt-get update && \
     apt-get install -y curl gnupg ca-certificates && \
