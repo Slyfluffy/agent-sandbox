@@ -1,9 +1,8 @@
 FROM ubuntu:26.04@sha256:678c6550cc43645e08669028bc177f50be4e7c5b8cca677067b1914d4afc7a03
 # Define the variable for the build phase only
 ARG DEBIAN_FRONTEND=noninteractive
-# Combine all configuration into a single RUN layer to minimize image size
 RUN apt-get update && \
-    apt-get install -y ca-certificates curl gnupg && \
+    apt-get install -y --no-install-recommends ca-certificates curl gnupg && \
     # --- Docker CLI Setup ---
     # Add Docker's official GPG key:
     install -m 0755 -d /etc/apt/keyrings && \
@@ -21,7 +20,7 @@ Architectures: $(dpkg --print-architecture)
 Signed-By: /etc/apt/keyrings/docker.asc
 EOF
 
-    # --- GitHub CLI Setup ---
+# --- GitHub CLI Setup ---
 RUN curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | \
         gpg --dearmor | tee /usr/share/keyrings/githubcli-archive-keyring.gpg > /dev/null && \
     echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://apt.github.com/ /" | \
