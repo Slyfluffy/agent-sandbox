@@ -10,6 +10,8 @@ RUN apt-get update && \
         -fsSL https://download.docker.com/linux/ubuntu/gpg \
         -o /etc/apt/keyrings/docker.asc && \
     chmod a+r /etc/apt/keyrings/docker.asc && \
+    rm -rf /var/lib/apt/lists/* && \
+    rm -rf /tmp/* && \
     # Add the repository to Apt sources:
     tee /etc/apt/sources.list.d/docker.sources <<EOF
 Types: deb
