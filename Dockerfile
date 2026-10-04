@@ -34,7 +34,7 @@ RUN curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | \
         docker-compose-plugin \
         gh && \
     # --- install uv ---
-    curl -LsSf https://astral.sh/uv/install.sh | sh && \
+    curl -LsSf https://astral.sh/uv/install.sh | env UV_INSTALL_DIR="/usr/local/bin" sh && \
     # Cleanup to keep the image slim
     rm -rf /var/lib/apt/lists/* && \
     rm -rf /tmp/*
