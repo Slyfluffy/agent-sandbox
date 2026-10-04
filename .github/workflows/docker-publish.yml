@@ -32,6 +32,7 @@ jobs:
     permissions:
       contents: read
       packages: write
+      security-events: write
       # This is used to complete the identity challenge
       # with sigstore/fulcio when running outside of PRs.
       id-token: write
@@ -71,6 +72,58 @@ jobs:
         uses: docker/metadata-action@dc802804100637a589fabce1cb79ff13a1411302
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+
+      # Build a local amd64 image so Trivy can scan it before publication.
+      - name: Build image for security scan
+        uses: docker/build-push-action@c3c9e263c25d99ce0380d002d59b67737d91b0dc
+        with:
+          context: .
+          platforms: linux/amd64
+          load: true
+          tags: local/agent-sandbox:trivy-scan
+          cache-from: type=gha
+
+      - name: Scan image with Trivy
+        id: trivy-scan
+        continue-on-error: true
+        uses: aquasecurity/trivy-action@915b19bbe73b92a6cf82a1bc12b087c9a19a5fe2
+        with:
+          image-ref: local/agent-sandbox:trivy-scan
+          format: sarif
+          output: trivy-results.sarif
+          severity: HIGH,CRITICAL
+          vuln-type: os,library
+          exit-code: '1'
+
+      - name: Generate CycloneDX SBOM
+        if: always()
+        uses: aquasecurity/trivy-action@915b19bbe73b92a6cf82a1bc12b087c9a19a5fe2
+        with:
+          image-ref: local/agent-sandbox:trivy-scan
+          format: cyclonedx
+          output: sbom.cdx.json
+          vuln-type: os,library
+
+      - name: Upload Trivy SARIF report
+        if: always()
+        continue-on-error: true
+        uses: github/codeql-action/upload-sarif@87ef0dc97def48aa960fbf026a2563ee9dbdb470
+        with:
+          sarif_file: trivy-results.sarif
+
+      - name: Upload SBOM and Trivy report
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: trivy-security-reports
+          path: |
+            sbom.cdx.json
+            trivy-results.sarif
+          retention-days: 30
+
+      - name: Enforce Trivy scan policy
+        if: steps.trivy-scan.outcome == 'failure'
+        run: exit 1
 
       # Build and push Docker image with Buildx (don't push on PR)
       # https://github.com/docker/build-push-action
