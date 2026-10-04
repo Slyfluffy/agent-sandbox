@@ -28,7 +28,7 @@ RUN curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | \
     echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://apt.github.com/ /" | \
         tee /etc/apt/sources.list.d/github-cli.list && \
     # --- Final Installation ---
-    apt-get update && \
+    apt-get update && apt-get upgrade -y && \
     apt-get install -y --no-install-recommends \
         docker-ce-cli \
         docker-compose-plugin \
