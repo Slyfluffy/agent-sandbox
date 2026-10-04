@@ -9,8 +9,8 @@ multi-ecosystem-groups:
   agent-sandbox:
     schedule:
       interval: "weekly"
-      day: "friday"
-      time: "17:00"
+      day: "saturday"
+      time: "06:30"
       timezone: "America/Chicago"
     assignees:
         - "Slyfluffy"
