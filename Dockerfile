@@ -1,4 +1,7 @@
 FROM ubuntu:26.04@sha256:da6fc2be547864451aa253836dd926da33623312df4a9a243e35dc877c378a78
+
+SHELL ["/bin/bash", "-o", "pipefail", "-c"]
+
 # Define the variable for the build phase only
 ARG DEBIAN_FRONTEND=noninteractive
 RUN apt-get update && \
@@ -28,7 +31,7 @@ RUN curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | \
     echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://apt.github.com/ /" | \
         tee /etc/apt/sources.list.d/github-cli.list && \
     # --- Final Installation ---
-    apt-get update && \
+    apt-get update && apt-get upgrade -y && \
     apt-get install -y --no-install-recommends \
         docker-ce-cli \
         docker-compose-plugin \

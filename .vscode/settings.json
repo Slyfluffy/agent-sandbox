@@ -2,6 +2,7 @@
     "cSpell.words": [
         "aquasecurity",
         "Buildx",
+        "cyclonedx",
         "dataaxiom",
         "dearmor",
         "debsig",
@@ -11,7 +12,9 @@
         "keyrings",
         "misconfig",
         "noninteractive",
+        "pipefail",
         "Rekor",
+        "sarif",
         "sigstore",
         "Slyfluffy",
         "trivyignores"
