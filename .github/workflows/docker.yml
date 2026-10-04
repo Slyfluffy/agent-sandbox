@@ -7,16 +7,16 @@ name: Docker
 
 on:
   schedule:
-    - cron: '0 0 * * 5'
+    - cron: "0 0 * * 5"
   push:
-    branches: [ "main" ]
+    branches: ["main"]
     # Publish semver tags as releases.
-    tags: [ 'v*.*.*' ]
+    tags: ["v*.*.*"]
     paths:
-      - 'Dockerfile'
-      - '.github/workflows/docker-publish.yml'
+      - "Dockerfile"
+      - ".github/workflows/docker.yml"
   pull_request:
-    branches: [ "main" ]
+    branches: ["main"]
 
 env:
   # Use docker.io for Docker Hub if empty
@@ -24,10 +24,8 @@ env:
   # github.repository as <account>/<repo>
   IMAGE_NAME: ${{ github.repository }}
 
-
 jobs:
   build:
-
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -41,13 +39,18 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
 
+      - name: Lint Dockerfile with Hadolint
+        uses: hadolint/hadolint-action@06be81baf89a55ffd0e24b8f04a4185738dd3387
+        with:
+          dockerfile: Dockerfile
+
       # Install the cosign tool except on PR
       # https://github.com/sigstore/cosign-installer
       - name: Install cosign
         if: github.event_name != 'pull_request'
         uses: sigstore/cosign-installer@6f9f17788090df1f26f669e9d70d6ae9567deba6
         with:
-          cosign-release: 'v2.2.4'
+          cosign-release: "v2.2.4"
 
       # Set up BuildKit Docker container builder to be able to build
       # multi-platform images and export cache
@@ -93,7 +96,7 @@ jobs:
           output: trivy-results.sarif
           severity: HIGH,CRITICAL
           vuln-type: os,library
-          exit-code: '1'
+          exit-code: "1"
 
       - name: Generate CycloneDX SBOM
         if: always()

@@ -12,6 +12,7 @@
         "keyrings",
         "misconfig",
         "noninteractive",
+        "pipefail",
         "Rekor",
         "sarif",
         "sigstore",
